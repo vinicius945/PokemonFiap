@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Editar Treinador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<header>
+    <h1>Pokémon Trainer App</h1>
+    <nav>
+        <a href="/pokemons">Pokémons</a>
+        <a href="/treinadores">Treinadores</a>
+    </nav>
+</header>
+<div class="container">
+    <a class="link-secondary" href="/treinadores">« Voltar</a>
+    <h2>Editar Treinador</h2>
+    <form th:action="@{/treinadores/{id}/atualizar(id=${treinador.id})}" method="post" th:object="${treinador}">
+        <label>Nome:</label>
+        <input type="text" th:field="*{nome}" required />
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required />
+
+        <br/><br/>
+        <input class="btn" type="submit" value="Atualizar" />
+    </form>
+</div>
+<footer>
+    &copy; 2025 Pokémon Trainer App
+</footer>
+</body>
+</html>

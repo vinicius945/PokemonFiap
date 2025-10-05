@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Pokémons Capturados</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<header>
+    <h1>Pokémon Trainer App</h1>
+    <nav>
+        <a href="/pokemons">Pokémons</a>
+        <a href="/treinadores">Treinadores</a>
+    </nav>
+</header>
+<div class="container">
+    <a class="btn" href="/pokemons/novo">Capturar Novo Pokémon</a>
+    <table>
+        <tr>
+            <th>ID</th><th>Nome</th><th>Tipo</th><th>Nível</th><th>Data Captura</th><th>Treinador</th><th>Ações</th>
+        </tr>
+        <tr th:each="poke : ${pokemons}">
+            <td th:text="${poke.id}"></td>
+            <td th:text="${poke.nome}"></td>
+            <td th:text="${poke.tipo}"></td>
+            <td th:text="${poke.nivel}"></td>
+            <td th:text="${poke.dataCaptura}"></td>
+            <td th:text="${poke.treinador.nome}"></td>
+            <td>
+                <a class="btn" th:href="@{/pokemons/{id}/evoluir(id=${poke.id})}">Evoluir</a>
+                <a class="btn" th:href="@{/pokemons/{id}/editar(id=${poke.id})}">Editar</a>
+                <a class="btn" th:href="@{/pokemons/{id}/liberar(id=${poke.id})}">Liberar</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<footer>
+    &copy; 2025 Pokémon App
+</footer>
+</body>
+</html>
