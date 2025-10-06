@@ -305,6 +305,92 @@ Acesse http://localhost:8080 no navegador.
 
 
 
+#Testando a API:
+
+## Endpoints da API PokémonFiap
+
+A aplicação oferece operações CRUD para as entidades **Treinador** e **Pokémon**.
+
+---
+
+### **Treinador**
+
+#### Listar todos os treinadores
+
+GET /treinadores
+
+**Exemplo de resposta:**
+```json
+[
+  { "id": 1, "nome": "Ash Ketchum" },
+  { "id": 2, "nome": "Misty" }
+]
+
+Criar um treinador
+POST /treinadores
+
+
+Payload:
+
+{
+  "nome": "Brock"
+}
+
+Atualizar um treinador
+PUT /treinadores/{id}
+
+
+Payload:
+
+{
+  "nome": "Ash K."
+}
+
+Deletar um treinador
+DELETE /treinadores/{id}
+
+Pokémon
+Listar todos os pokémons
+GET /pokemons
+
+
+Exemplo de resposta:
+
+[
+  { "id": 1, "nome": "Pikachu", "tipo": "Elétrico", "idTreinador": 1 }
+]
+
+Criar um Pokémon
+POST /pokemons
+
+
+Payload:
+
+{
+  "nome": "Pikachu",
+  "tipo": "Elétrico",
+  "idTreinador": 1
+}
+
+Atualizar um Pokémon
+PUT /pokemons/{id}
+
+
+Payload:
+
+{
+  "nome": "Raichu",
+  "tipo": "Elétrico",
+  "idTreinador": 1
+}
+
+Deletar um Pokémon
+DELETE /pokemons/{id}
+
+```
+
+
+
 
 # Veja o video do deploy da aplicação
 
