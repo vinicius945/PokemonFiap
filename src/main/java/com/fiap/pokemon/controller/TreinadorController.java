@@ -58,7 +58,7 @@ public class TreinadorController {
 
     @GetMapping("/{id}/deletar")
     public String deletar(@PathVariable Long id) {
-        treinadorService.deletar(id);
+        treinadorService.deletarTreinador(id);
         return "redirect:/treinadores";
     }
 }

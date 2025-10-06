@@ -4,20 +4,100 @@
     <meta charset="UTF-8" />
     <title>Pokémons Capturados</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        body {
+            background-image: url('/css/Img/FundoPokemon.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            margin: 50px auto;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .btn {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #ffcb05;
+            color: #2a75bb;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #f5b700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #fff;
+            text-align: center;
+        }
+
+        th {
+            background-color: rgba(42, 117, 187, 0.8);
+        }
+
+        td {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .empty-message {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+    </style>
 </head>
 <body>
-<header>
-    <h1>Pokémon Trainer App</h1>
-    <nav>
-        <a href="/pokemons">Pokémons</a>
-        <a href="/treinadores">Treinadores</a>
-    </nav>
-</header>
 <div class="container">
+    <h1>Pokémons Capturados</h1>
+
     <a class="btn" href="/pokemons/novo">Capturar Novo Pokémon</a>
-    <table>
+
+    <!-- Mostra mensagem se não houver Pokémons -->
+    <div th:if="${#lists.isEmpty(pokemons)}" class="empty-message">
+        Nenhum Pokémon capturado ainda! 🐾
+    </div>
+
+    <!-- Tabela de Pokémons -->
+    <table th:if="${!#lists.isEmpty(pokemons)}">
         <tr>
-            <th>ID</th><th>Nome</th><th>Tipo</th><th>Nível</th><th>Data Captura</th><th>Treinador</th><th>Ações</th>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Nível</th>
+            <th>Data Captura</th>
+            <th>Treinador</th>
+            <th>Ações</th>
         </tr>
         <tr th:each="poke : ${pokemons}">
             <td th:text="${poke.id}"></td>
@@ -34,8 +114,9 @@
         </tr>
     </table>
 </div>
+
 <footer>
-    &copy; 2025 Pokémon App
+    &copy; 2025 PokémonFiap
 </footer>
 </body>
 </html>

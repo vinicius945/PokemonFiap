@@ -1,5 +1,7 @@
 package com.fiap.pokemon.model;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -22,6 +24,7 @@ public class Treinador {
     private String nome;
     private String email;
 
-    @OneToMany(mappedBy = "treinador", cascade = CascadeType.ALL)
-    private List<Pokemon> pokemons;
+    @OneToMany(mappedBy = "treinador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pokemon> pokemons = new ArrayList<>();
+
 }

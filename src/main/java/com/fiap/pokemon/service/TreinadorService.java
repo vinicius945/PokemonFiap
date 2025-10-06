@@ -39,11 +39,10 @@ public class TreinadorService {
     }
 
 
-    public void deletar(Long id) {
-        Treinador treinador = repo.findById(id).orElseThrow(() -> new RuntimeException("Treinador não encontrado"));
-        if (treinador.getPokemons() != null && !treinador.getPokemons().isEmpty()) {
-            throw new IllegalStateException("Não é possível excluir o treinador pois ele possui Pokémons capturados.");
-        }
-        repo.deleteById(id);
+    public void deletarTreinador(Long id) {
+        Treinador t = repo.findById(id).orElseThrow(() -> new RuntimeException("Treinador não encontrado"));
+        // Remove os pokémons
+        t.getPokemons().clear();
+        repo.delete(t);
     }
 }
