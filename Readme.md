@@ -240,7 +240,7 @@ Disparar o deploy automático no Azure
 
 # Após isso teste a aplicação
 
-[Link da Plaicação](webapp-pokemonfiap-945-sprint3.azurewebsites.net)
+[Link da Aplicação](webapp-pokemonfiap-945-sprint3.azurewebsites.net)
 
 4️⃣ Testando localmente
 Antes do deploy, você pode rodar a aplicação localmente:
@@ -271,6 +271,6 @@ Acesse http://localhost:8080 no navegador.
 
 
 
-# Vjea o video do deploy da aplicação
+# Veja o video do deploy da aplicação
 
 [Vídeo](https://youtu.be/wSgRGp5Qy7g?si=5gA6-7cTAiBIiqx8)
