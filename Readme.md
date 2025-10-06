@@ -17,11 +17,15 @@ Foi desenvolvido como parte do desafio da disciplina de Java Avançado da FIAP.
 
 🛠️ Tecnologias Utilizadas
 
-Backend: Java 17, Spring Boot 3.x
+Backend: Java 21, Spring Boot 3, Spring Data JPA
 
-Frontend: Thymeleaf, HTML5, CSS3
+Frontend: Bootstrap + CSS customizado
 
-Banco de Dados: H2 (em memória)
+Banco de Dados: Azure SQL (Banco de Dados em Nuvem)
+
+Azure App Service (Hospedagem em Nuvem)
+
+GitHub Actions (CI/CD)
 
 Gerenciamento de Dependências: Maven
 
