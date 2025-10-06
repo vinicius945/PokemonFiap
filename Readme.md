@@ -56,10 +56,16 @@ CREATE TABLE pokemon (
         REFERENCES treinador(id)
         ON DELETE CASCADE
 );
+
+````
+
+
 ✅ Com isso, você terá a estrutura básica para armazenar Treinadores e Pokémons.
 
 2️⃣ Criar a infraestrutura no Azure
 Agora, vamos criar os recursos no Azure (Resource Group, SQL Server, Banco de Dados e Web App). Abra o Azure CLI e execute o seguinte comando em uma linha ou copie em um script:
+
+```bash
 
 bash
 Copiar código
@@ -114,6 +120,10 @@ az webapp create \
   --runtime $JAVA_RUNTIME
 
 echo "🚀 Infraestrutura criada com sucesso!"
+
+```
+
+
 ✅ Após esse passo, você terá o banco e o Web App prontos para receber a aplicação.
 
 3️⃣ Configurar o deploy automático no GitHub
@@ -122,6 +132,7 @@ Para que o deploy seja feito automaticamente via GitHub Actions, vamos criar um 
 a) Criar o script start-deploy.sh
 Na raiz do projeto, crie um arquivo chamado start-deploy.sh com o seguinte conteúdo:
 
+```bash
 bash
 Copiar código
 #!/bin/bash
@@ -193,12 +204,19 @@ git add "$WORKFLOW_PATH"
 git commit -m "✨ Add GitHub Actions workflow for Azure deploy (PokemonFiap)"
 git push origin main
 
+````
+
 echo "✅ Deploy automático configurado!"
 b) Executar o script
 bash
 Copiar código
+
+```bash
 chmod +x start-deploy.sh
 ./start-deploy.sh
+```
+
+
 ✅ Esse script vai:
 
 Criar ou atualizar o Service Principal no Azure
@@ -220,12 +238,19 @@ Configure as variáveis de ambiente:
 
 bash
 Copiar código
+
+```bash
 SPRING_DATASOURCE_USERNAME=Trainer
 SPRING_DATASOURCE_PASSWORD=Azurecast@666
 SPRING_DATASOURCE_URL=jdbc:sqlserver://sqlserver-pokemonfiap-945-sprint3.database.windows.net:1433;database=pokemonfiapDB;encrypt=true;trustServerCertificate=false;
+
+
+```
 Rode a aplicação:
 
 bash
 Copiar código
+```bash
 mvn spring-boot:run
+````
 Acesse http://localhost:8080 no navegador.
