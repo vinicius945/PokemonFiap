@@ -26,6 +26,12 @@ O sistema oferece:
 
 ---
 
+
+# Arquitetura
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8f50bec4-a5c6-4f4e-b145-d102a4efea20" />
+
+
 # 🚀 Passo a Passo para Configuração do Projeto
 
 ## 1️⃣ Configurar o Banco de Dados
