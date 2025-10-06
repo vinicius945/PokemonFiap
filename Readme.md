@@ -36,34 +36,8 @@ O sistema oferece:
 
 ## 1️⃣ Configurar o Banco de Dados
 
-O primeiro passo é criar as tabelas **treinador** e **pokemon** no banco de dados. Copie e execute o seguinte script SQL no seu Azure SQL Database ou SQL Server local:
+O primeiro passo é criar as tabelas **treinador** e **pokemon** no banco de dados. Copie e cole o script do banco, que está localizado em: script.sql
 
-```sql
--- Exclui as tabelas caso já existam
-DROP TABLE IF EXISTS pokemon;
-DROP TABLE IF EXISTS treinador;
-
--- Criação da tabela treinador
-CREATE TABLE treinador (
-    id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE
-);
-
--- Criação da tabela pokemon com FK para treinador
-CREATE TABLE pokemon (
-    id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
-    nivel INT NOT NULL CHECK (nivel BETWEEN 1 AND 100),
-    data_captura DATE,
-    treinador_id BIGINT NOT NULL,
-    CONSTRAINT fk_treinador FOREIGN KEY (treinador_id)
-        REFERENCES treinador(id)
-        ON DELETE CASCADE
-);
-
-````
 
 
 ✅ Com isso, você terá a estrutura básica para armazenar Treinadores e Pokémons.
