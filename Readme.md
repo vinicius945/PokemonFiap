@@ -237,6 +237,11 @@ Commitar e pushar para a branch main
 
 Disparar o deploy automático no Azure
 
+
+# Após isso teste a aplicação
+
+Link da aplicação [webapp-pokemonfiap-945-sprint3.azurewebsites.net]
+
 4️⃣ Testando localmente
 Antes do deploy, você pode rodar a aplicação localmente:
 
