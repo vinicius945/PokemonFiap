@@ -1,12 +1,14 @@
 # PokemonFiap
 
-**Projeto Sprint 3 – Desafio Java / Azure / CI-CD**
+**Pokemon Dev Ops 4 – Java 21/ Azure / CI-CD**
 
 ---
 
 ## 👥 Autor
 
-- Vinícius Prates Altafini
+Enzo Prado Soddano — RM557937
+Lucas Resende Lima — RM556564
+Vinícius Prates Altafini — RM559183
 
 ---
 
