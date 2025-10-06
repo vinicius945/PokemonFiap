@@ -1,79 +1,229 @@
-🐾 Pokemon FIAP
-📚 Descrição
+# PokemonFiap
 
-O Pokemon FIAP é uma aplicação web desenvolvida para gerenciar informações sobre Pokémons, utilizando o framework Spring Boot com Thymeleaf. O sistema permite realizar operações como:
+**Projeto Sprint 3 – Desafio Java / Azure / CI-CD**
 
-Cadastro de novos Pokémons
+---
 
-Edição de dados existentes
+## 👥 Autor
 
-Exclusão de Pokémons
+- Vinícius Prates Altafini
 
-Busca por tipo
+---
 
-Evolução de nível
+## 📝 Descrição
 
-Foi desenvolvido como parte do desafio da disciplina de Java Avançado da FIAP.
+Este projeto é um aplicativo web para gerenciamento de **Pokémons e Treinadores**, utilizando Java 21, Spring Boot, banco de dados Azure SQL e deploy automático via GitHub Actions no Azure Web App.
 
-🛠️ Tecnologias Utilizadas
+O sistema oferece:
 
-Backend: Java 21, Spring Boot 3, Spring Data JPA
+- CRUD completo de Treinadores e Pokémons  
+- Validação de níveis de Pokémon (1 a 100)  
+- Persistência em Azure SQL Database  
+- Deploy contínuo com GitHub Actions  
+- Hospedagem em Azure Web App  
 
-Frontend: Bootstrap + CSS customizado
+---
 
-Banco de Dados: Azure SQL (Banco de Dados em Nuvem)
+# 🚀 Passo a Passo para Configuração do Projeto
 
-Azure App Service (Hospedagem em Nuvem)
+## 1️⃣ Configurar o Banco de Dados
 
-GitHub Actions (CI/CD)
+O primeiro passo é criar as tabelas **treinador** e **pokemon** no banco de dados. Copie e execute o seguinte script SQL no seu Azure SQL Database ou SQL Server local:
 
-Gerenciamento de Dependências: Maven
+```sql
+-- Exclui as tabelas caso já existam
+DROP TABLE IF EXISTS pokemon;
+DROP TABLE IF EXISTS treinador;
 
-Controle de Versão: Git
+-- Criação da tabela treinador
+CREATE TABLE treinador (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
 
-🚀 Como Executar
-1. Clonar o Repositório
-   git clone https://github.com/vinicius945/PokemonFiap.git
-   cd pokemon-fiap
+-- Criação da tabela pokemon com FK para treinador
+CREATE TABLE pokemon (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    nivel INT NOT NULL CHECK (nivel BETWEEN 1 AND 100),
+    data_captura DATE,
+    treinador_id BIGINT NOT NULL,
+    CONSTRAINT fk_treinador FOREIGN KEY (treinador_id)
+        REFERENCES treinador(id)
+        ON DELETE CASCADE
+);
+✅ Com isso, você terá a estrutura básica para armazenar Treinadores e Pokémons.
 
-2. Executar com Maven
-   ./mvnw spring-boot:run
+2️⃣ Criar a infraestrutura no Azure
+Agora, vamos criar os recursos no Azure (Resource Group, SQL Server, Banco de Dados e Web App). Abra o Azure CLI e execute o seguinte comando em uma linha ou copie em um script:
 
+bash
+Copiar código
+RESOURCE_GROUP="rg-pokemonfiap-sprint3"
+LOCATION="eastus2"
+SQL_SERVER_NAME="sqlserver-pokemonfiap-945-sprint3"
+SQL_DATABASE_NAME="pokemonfiapDB"
+ADMIN_USER="Trainer"
+ADMIN_PASSWORD="Azurecast@666"
+APPSERVICE_PLAN_NAME="plan-pokemonfiap-sprint3"
+WEBAPP_NAME="webapp-pokemonfiap-945-sprint3"
+JAVA_RUNTIME="JAVA:21-java21"
 
-Ou, se preferir:
+# Criar grupo de recursos
+az group create --name $RESOURCE_GROUP --location $LOCATION
 
+# Criar servidor SQL
+az sql server create \
+  --name $SQL_SERVER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --location $LOCATION \
+  --admin-user $ADMIN_USER \
+  --admin-password $ADMIN_PASSWORD
+
+# Configurar firewall do SQL
+az sql server firewall-rule create \
+  --resource-group $RESOURCE_GROUP \
+  --server $SQL_SERVER_NAME \
+  --name AllowAzureServices \
+  --start-ip-address 0.0.0.0 \
+  --end-ip-address 0.0.0.0
+
+# Criar banco de dados
+az sql db create \
+  --resource-group $RESOURCE_GROUP \
+  --server $SQL_SERVER_NAME \
+  --name $SQL_DATABASE_NAME \
+  --service-objective S0
+
+# Criar App Service Plan
+az appservice plan create \
+  --name $APPSERVICE_PLAN_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --sku B1 \
+  --is-linux
+
+# Criar Web App
+az webapp create \
+  --name $WEBAPP_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --plan $APPSERVICE_PLAN_NAME \
+  --runtime $JAVA_RUNTIME
+
+echo "🚀 Infraestrutura criada com sucesso!"
+✅ Após esse passo, você terá o banco e o Web App prontos para receber a aplicação.
+
+3️⃣ Configurar o deploy automático no GitHub
+Para que o deploy seja feito automaticamente via GitHub Actions, vamos criar um Service Principal e configurar o segredo AZURE_CREDENTIALS.
+
+a) Criar o script start-deploy.sh
+Na raiz do projeto, crie um arquivo chamado start-deploy.sh com o seguinte conteúdo:
+
+bash
+Copiar código
+#!/bin/bash
+
+# Configurações
+APP_NAME="webapp-pokemonfiap-945-sprint3"
+RESOURCE_GROUP="rg-pokemonfiap-sprint3"
+REPO="vinicius945/PokemonFiap"
+WORKFLOW_PATH=".github/workflows/deploy.yml"
+
+# 1. Criar Service Principal
+echo "🔐 Criando Service Principal..."
+az ad sp create-for-rbac \
+  --name "GitHub-Action-Deploy-PokemonFiap" \
+  --role "Contributor" \
+  --scopes "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Web/sites/$APP_NAME" \
+  --sdk-auth > azure-credentials.json
+
+# 2. Criar segredo no GitHub
+echo "🔑 Adicionando segredo AZURE_CREDENTIALS ao GitHub..."
+gh secret set AZURE_CREDENTIALS --repo "$REPO" < azure-credentials.json
+
+# 3. Apagar o JSON local
+rm azure-credentials.json
+
+# 4. Criar o arquivo de workflow
+echo "🛠️ Gerando workflow de deploy em $WORKFLOW_PATH..."
+mkdir -p .github/workflows
+cat > "$WORKFLOW_PATH" << 'EOF'
+name: Build and Deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java version
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn clean install
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'webapp-pokemonfiap-945-sprint3'
+        package: '${{ github.workspace }}/target/*.jar'
+EOF
+
+# 5. Commit e push do workflow
+git add "$WORKFLOW_PATH"
+git commit -m "✨ Add GitHub Actions workflow for Azure deploy (PokemonFiap)"
+git push origin main
+
+echo "✅ Deploy automático configurado!"
+b) Executar o script
+bash
+Copiar código
+chmod +x start-deploy.sh
+./start-deploy.sh
+✅ Esse script vai:
+
+Criar ou atualizar o Service Principal no Azure
+
+Configurar o segredo AZURE_CREDENTIALS no GitHub
+
+Gerar o workflow .github/workflows/deploy.yml
+
+Commitar e pushar para a branch main
+
+Disparar o deploy automático no Azure
+
+4️⃣ Testando localmente
+Antes do deploy, você pode rodar a aplicação localmente:
+
+Certifique-se de ter o Java 21 e Maven instalados.
+
+Configure as variáveis de ambiente:
+
+bash
+Copiar código
+SPRING_DATASOURCE_USERNAME=Trainer
+SPRING_DATASOURCE_PASSWORD=Azurecast@666
+SPRING_DATASOURCE_URL=jdbc:sqlserver://sqlserver-pokemonfiap-945-sprint3.database.windows.net:1433;database=pokemonfiapDB;encrypt=true;trustServerCertificate=false;
+Rode a aplicação:
+
+bash
+Copiar código
 mvn spring-boot:run
-
-3. Acessar a Aplicação
-
-Abra o navegador e acesse:
-
-http://localhost:8080/pokemons
-
-🧪 Funcionalidades
-
-Cadastro de Pokémon: Formulário para inserir novos Pokémons com nome, tipo e nível.
-
-Edição: Atualização de dados de Pokémons existentes.
-
-Exclusão: Remoção de Pokémons do banco de dados.
-
-Busca por Tipo: Filtragem de Pokémons por tipo.
-
-Evolução: Aumento do nível do Pokémon (máximo nível 100).
-
-📸 Capturas de Tela
-
-
-Exemplo de como a página inicial se apresenta.
-
-
-Formulário para cadastro de novos Pokémons.
-
-👥 Autores
-
-Vinícius Prates Altafini — 559183
-
-Lucas Resende Lima — 556564
-
-Enzo Prado Soddano — 557937
+Acesse http://localhost:8080 no navegador.
