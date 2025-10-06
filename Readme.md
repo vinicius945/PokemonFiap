@@ -135,12 +135,14 @@ echo "🚀 Infraestrutura criada com sucesso!"
 3️⃣ Configurar o deploy automático no GitHub
 Para que o deploy seja feito automaticamente via GitHub Actions, vamos criar um Service Principal e configurar o segredo AZURE_CREDENTIALS.
 
-a) Criar o script start-deploy.sh
+a) Criar o script deploy.sh
 Na raiz do projeto, crie um arquivo chamado start-deploy.sh com o seguinte conteúdo:
+
+Copiar código
 
 ```bash
 bash
-Copiar código
+
 #!/bin/bash
 
 # Configurações
@@ -218,8 +220,8 @@ bash
 Copiar código
 
 ```bash
-chmod +x start-deploy.sh
-./start-deploy.sh
+chmod +x deploy.sh
+./deploy.sh
 ```
 
 
