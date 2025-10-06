@@ -216,6 +216,67 @@ Disparar o deploy automático no Azure
 
 [Link da Aplicação](webapp-pokemonfiap-945-sprint3.azurewebsites.net)
 
+
+# Após criar e testar o projeto
+
+Crie o app.sh, e cole o seguinte script nele:
+
+```bash
+#!/bin/bash
+
+# Variáveis
+RESOURCE_GROUP="rg-pokemonfiap-sprint3"
+WEBAPP_NAME="webapp-pokemonfiap-945-sprint3"
+APP_INSIGHTS_NAME="appinsights-pokemonfiap"
+LOCATION="eastus2"  # mesma região do Web App
+
+echo "🔹 Criando Application Insights..."
+az monitor app-insights component create \
+    --app $APP_INSIGHTS_NAME \
+    --location $LOCATION \
+    --resource-group $RESOURCE_GROUP \
+    --application-type web
+
+echo "🔹 Recuperando Instrumentation Key..."
+INSTRUMENTATION_KEY=$(az monitor app-insights component show \
+    --app $APP_INSIGHTS_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --query instrumentationKey -o tsv)
+
+echo "🔹 Configurando Web App para enviar métricas ao Application Insights..."
+az webapp config appsettings set \
+    --name $WEBAPP_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --settings "APPINSIGHTS_INSTRUMENTATIONKEY=$INSTRUMENTATION_KEY"
+
+echo "🔹 Verificando se a configuração foi aplicada..."
+az webapp config appsettings list \
+    --name $WEBAPP_NAME \
+    --resource-group $RESOURCE_GROUP
+
+echo "✅ Tudo pronto! Web App configurado com Application Insights."
+```
+
+Passo 2: Rodar o script
+
+Abra o Azure Cloud Shell ou terminal com o Azure CLI instalado.
+
+Navegue até o diretório onde o app.sh está salvo.
+
+Dê permissão de execução ao script:
+```bash
+chmod +x app.sh
+```
+
+Execute o script:
+
+```bash
+./app.sh
+````
+
+
+E pronto, o Application Insights, foi criado e configurado.
+
 4️⃣ Testando localmente
 Antes do deploy, você pode rodar a aplicação localmente:
 
