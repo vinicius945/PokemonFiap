@@ -6,9 +6,9 @@
 
 ## 👥 Autor
 
-Enzo Prado Soddano — RM557937
-Lucas Resende Lima — RM556564
-Vinícius Prates Altafini — RM559183
+* Enzo Prado Soddano — RM557937
+* Lucas Resende Lima — RM556564
+* Vinícius Prates Altafini — RM559183
 
 ---
 
