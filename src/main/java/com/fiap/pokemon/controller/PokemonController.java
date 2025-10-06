@@ -23,6 +23,11 @@ public class PokemonController {
         this.treinadorService = treinadorService;
     }
 
+    @GetMapping("/")
+    public String redirecionarParaLista() {
+        return "redirect:/pokemons";
+    }
+
     @GetMapping
     public String listarPokemons(Model model) {
         List<Pokemon> pokemons = pokemonService.listarTodos();
