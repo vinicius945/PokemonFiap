@@ -305,7 +305,7 @@ Acesse http://localhost:8080 no navegador.
 
 
 
-#Testando a API:
+
 
 ## Endpoints da API PokémonFiap
 
